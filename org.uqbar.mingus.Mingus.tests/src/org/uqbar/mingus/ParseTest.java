@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.uqbar.mingus.mingus.Abstraction;
 import org.uqbar.mingus.mingus.Application;
+import org.uqbar.mingus.mingus.NumberLiteral;
 import org.uqbar.mingus.mingus.Program;
 import org.uqbar.mingus.mingus.Term;
 import org.uqbar.mingus.mingus.Variable;
@@ -102,6 +103,11 @@ public class ParseTest {
   @Test
   public void canParseAbstractionWithinAbstraction() {
     assertCanParse("\\x.\\y.x y", Abstraction.class);
+  }
+
+  @Test
+  public void canParseNumberLiterals() {
+    assertCanParse("10", NumberLiteral.class);
   }
 
 }

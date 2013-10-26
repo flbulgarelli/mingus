@@ -15,7 +15,7 @@ Term1 returns Term:
 	Term2 ({Application.function=current} argument=Term2)*;
 
 Term2 returns Term:
-	Term3 | Variable;
+	Term3 | Variable | NumberLiteral;
 
 Term3 returns Term:
 	'(' Term0 ')';
@@ -24,8 +24,10 @@ Abstraction:
 	'\\' parameter=ID '.' body=Term0;
 
 Variable:
-	name=ID;	
+	name=ID;
 
+NumberLiteral:
+	value=INT;
 
 
 
