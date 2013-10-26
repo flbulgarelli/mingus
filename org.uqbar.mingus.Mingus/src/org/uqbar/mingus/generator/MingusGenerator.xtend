@@ -4,12 +4,29 @@
 package org.uqbar.mingus.generator
 
 import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.xtext.generator.IGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess
+import org.eclipse.xtext.generator.IGenerator
+import org.uqbar.mingus.mingus.NumberLiteral
+import org.uqbar.mingus.mingus.Program
+import org.uqbar.mingus.mingus.Abstraction
+import org.uqbar.mingus.mingus.Application
+import org.uqbar.mingus.mingus.Variable
 
 class MingusGenerator implements IGenerator {
 	
 	override void doGenerate(Resource resource, IFileSystemAccess fsa) {
-		//TODO implement me
+		fsa.generateFile( "out.js", translate((resource.allContents.head as Program).value))
 	}
+	
+	def dispatch translate(Variable variable) 
+		'''«variable.name»'''
+	
+	def dispatch translate(Application application) 
+		'''«translate(application.function)»(«translate(application.argument)»)'''
+	
+	def dispatch translate(Abstraction abstraction) 
+		'''(function(«abstraction.parameter»){return «translate(abstraction.body)»})'''
+	
+	def dispatch translate(NumberLiteral literal) 
+		'''«literal.value»'''
 }
