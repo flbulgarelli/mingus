@@ -9,15 +9,18 @@ Term returns Term:
 	Term0;
 
 Term0 returns Term:
-	Term1 | Abstraction;
+	Term1 | Letrec;
 
 Term1 returns Term:
-	Term2 ({Application.function=current} argument=Term2)*;
+	Term2 | Abstraction;
 
 Term2 returns Term:
-	Term3 | Variable | NumberLiteral;
+	Term3 ({Application.function=current} argument=Term3)*;
 
 Term3 returns Term:
+	Term4 | Variable | NumberLiteral;
+
+Term4 returns Term:
 	'(' Term0 ')';
 
 Abstraction:
@@ -29,10 +32,5 @@ Variable:
 NumberLiteral:
 	value=INT;
 
-
-
-
-
-
- 
-
+Letrec:
+	'letrec' (name=ID) '=' binding=Term1 'in' body=Term0;

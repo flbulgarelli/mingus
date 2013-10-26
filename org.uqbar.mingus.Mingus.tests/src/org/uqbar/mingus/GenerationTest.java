@@ -1,36 +1,8 @@
 package org.uqbar.mingus;
 
-import static org.junit.Assert.assertEquals;
-
-import javax.inject.Inject;
-
-import org.eclipse.xtext.generator.IFileSystemAccess;
-import org.eclipse.xtext.generator.IGenerator;
-import org.eclipse.xtext.generator.InMemoryFileSystemAccess;
-import org.eclipse.xtext.junit4.InjectWith;
-import org.eclipse.xtext.junit4.XtextRunner;
-import org.eclipse.xtext.junit4.util.ParseHelper;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.uqbar.mingus.mingus.Program;
 
-@RunWith(XtextRunner.class)
-@InjectWith(MingusInjectorProvider.class)
-public class GenerationTest {
-
-  @Inject
-  private IGenerator generator;
-
-  @Inject
-  private ParseHelper<Program> parser;
-
-  void assertGenerates(String code, String expectedGeneratedCode) throws Exception {
-    InMemoryFileSystemAccess fsa = new InMemoryFileSystemAccess();
-    generator.doGenerate(parser.parse(code).eResource(), fsa);
-    CharSequence generatedCode = fsa.getFiles().get(IFileSystemAccess.DEFAULT_OUTPUT + "out.js");
-    assertEquals(expectedGeneratedCode, generatedCode.toString());
-  }
-
+public class GenerationTest extends AbstractMingusTest {
   @Test
   public void translatesVariable() throws Exception {
     assertGenerates("x", "x");
@@ -45,24 +17,43 @@ public class GenerationTest {
   public void translatesApplication() throws Exception {
     assertGenerates("x y", "x(y)");
   }
-  
+
   @Test
   public void translatesApplicationWithinAbstraction() throws Exception {
     assertGenerates("\\x.x y", "(function(x){return x(y)})");
   }
-  
+
   @Test
   public void translatesApplicationOfAbstraction() throws Exception {
     assertGenerates("(\\x.x) y", "(function(x){return x})(y)");
   }
-  
+
   @Test
   public void translatesNumbers() throws Exception {
     assertGenerates("12", "12");
   }
-  
+
   @Test
   public void translatesApplicationOfThreeVariables() throws Exception {
     assertGenerates("x y z", "x(y)(z)");
+  }
+
+  @Test
+  // TODO may optimize here
+  public void translatesAbstractionWithinAbstraction() throws Exception {
+    assertGenerates("\\x.\\y.x y", "(function(x){return (function(y){return x(y)})})");
+  }
+
+  @Test
+  public void translatesLetrecsIntoScopedVars() throws Exception {
+    assertGenerates("letrec x = 2 in z x", "(function(){var x=2;return z(x)})()");
+  }
+
+  @Test
+  // TODO may optimize here
+  public void translatesNestedLetrecsIntoNestedScopedVars() throws Exception {
+    assertGenerates(
+      "letrec x = f in letrec z = 3 in x z",
+      "(function(){var x=f;return (function(){var z=3;return x(z)})()})()");
   }
 }

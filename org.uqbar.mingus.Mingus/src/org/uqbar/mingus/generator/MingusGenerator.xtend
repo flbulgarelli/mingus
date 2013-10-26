@@ -11,6 +11,7 @@ import org.uqbar.mingus.mingus.Program
 import org.uqbar.mingus.mingus.Abstraction
 import org.uqbar.mingus.mingus.Application
 import org.uqbar.mingus.mingus.Variable
+import org.uqbar.mingus.mingus.Letrec
 
 class MingusGenerator implements IGenerator {
 	
@@ -29,4 +30,7 @@ class MingusGenerator implements IGenerator {
 	
 	def dispatch translate(NumberLiteral literal) 
 		'''«literal.value»'''
+		
+	def dispatch translate(Letrec letrec) 
+		'''(function(){var «letrec.name»=«translate(letrec.binding)»;return «translate(letrec.body)»})()'''
 }

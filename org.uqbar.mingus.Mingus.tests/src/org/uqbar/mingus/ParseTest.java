@@ -1,48 +1,13 @@
 package org.uqbar.mingus;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import javax.inject.Inject;
-
-import org.eclipse.xtext.junit4.InjectWith;
-import org.eclipse.xtext.junit4.XtextRunner;
-import org.eclipse.xtext.junit4.util.ParseHelper;
-import org.eclipse.xtext.scoping.IScopeProvider;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.uqbar.mingus.mingus.Abstraction;
 import org.uqbar.mingus.mingus.Application;
+import org.uqbar.mingus.mingus.Letrec;
 import org.uqbar.mingus.mingus.NumberLiteral;
-import org.uqbar.mingus.mingus.Program;
-import org.uqbar.mingus.mingus.Term;
 import org.uqbar.mingus.mingus.Variable;
 
-@RunWith(XtextRunner.class)
-@InjectWith(MingusInjectorProvider.class)
-public class ParseTest {
-
-  @Inject
-  private ParseHelper<Program> parseHelper;
-
-  @Inject
-  private IScopeProvider scopeProvider;
-
-  private void assertCanParse(String text, Class<?> expectedRootType) {
-    try {
-      Term value = parseHelper.parse(text).getValue();
-      assertNotNull(value);
-      assertTrue(
-        typeMismatchMessage(expectedRootType, value),
-        expectedRootType.isAssignableFrom(value.getClass()));
-    } catch (Exception e) {
-      throw new AssertionError("", e);
-    }
-  }
-
-  private String typeMismatchMessage(Class<?> expectedRootType, Term value) {
-    return "expected " + expectedRootType.getSimpleName() + " but was " + value.getClass().getSimpleName();
-  }
+public class ParseTest extends AbstractMingusTest {
 
   @Test
   public void canParseVariable() {
@@ -108,6 +73,26 @@ public class ParseTest {
   @Test
   public void canParseNumberLiterals() {
     assertCanParse("10", NumberLiteral.class);
+  }
+
+  @Test
+  public void canParseSimpleLetrecs() {
+    assertCanParse("letrec x = 2 in x", Letrec.class);
+  }
+
+  @Test
+  public void canParseLetercsWithinParenthesis() {
+    assertCanParse("(letrec x = f in z x) h", Application.class);
+  }
+
+  @Test
+  public void canParseNestedLetrecs() {
+    assertCanParse("letrec x = 2 in (let y = x in y)", Letrec.class);
+  }
+
+  @Test
+  public void canParseRecursiveLetrecs() {
+    assertCanParse("letrec x = x x in x", Letrec.class);
   }
 
 }
