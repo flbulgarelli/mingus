@@ -3,6 +3,7 @@ package org.uqbar.mingus;
 import org.junit.Test;
 import org.uqbar.mingus.mingus.Abstraction;
 import org.uqbar.mingus.mingus.Application;
+import org.uqbar.mingus.mingus.Let;
 import org.uqbar.mingus.mingus.Letrec;
 import org.uqbar.mingus.mingus.NumberLiteral;
 import org.uqbar.mingus.mingus.Variable;
@@ -73,6 +74,11 @@ public class ParseTest extends AbstractMingusTest {
   @Test
   public void canParseNumberLiterals() {
     assertCanParse("10", NumberLiteral.class);
+  }
+  
+  @Test
+  public void canParseSimpleLets() {
+    assertCanParse("let x = 2 in x", Let.class);
   }
 
   @Test

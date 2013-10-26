@@ -9,7 +9,7 @@ Term returns Term:
 	Term0;
 
 Term0 returns Term:
-	Term1 | Letrec;
+	Term1 | Letrec | Let;
 
 Term1 returns Term:
 	Term2 | Abstraction;
@@ -34,3 +34,6 @@ NumberLiteral:
 
 Letrec:
 	'letrec' (name=ID) '=' binding=Term1 'in' body=Term0;
+
+Let:
+	'let' (name=ID) '=' binding=Term1 'in' body=Term0;	

@@ -6,12 +6,12 @@ package org.uqbar.mingus.generator
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IGenerator
-import org.uqbar.mingus.mingus.NumberLiteral
-import org.uqbar.mingus.mingus.Program
 import org.uqbar.mingus.mingus.Abstraction
 import org.uqbar.mingus.mingus.Application
-import org.uqbar.mingus.mingus.Variable
 import org.uqbar.mingus.mingus.Letrec
+import org.uqbar.mingus.mingus.NumberLiteral
+import org.uqbar.mingus.mingus.Program
+import org.uqbar.mingus.mingus.Variable
 
 class MingusGenerator implements IGenerator {
 	
