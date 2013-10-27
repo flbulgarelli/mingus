@@ -18,45 +18,45 @@ import org.uqbar.mingus.mingus.Binding
 import java.util.List
 
 class MingusGenerator implements IGenerator {
-	
-	override void doGenerate(Resource resource, IFileSystemAccess fsa) {
-		fsa.generateFile( "out.js", translate((resource.allContents.head as Program).value))
-	}
-	
-	def dispatch translate(Variable variable) 
-		'''«translateId(variable.name)»'''
-	
-	def dispatch translate(Application application) 
-		'''«translate(application.function)»(«translate(application.argument)»)'''
-	
-	def dispatch translate(Abstraction abstraction) 
-		'''(function(«translateId(abstraction.parameter)»){return «translate(abstraction.body)»})'''
-	
-	def dispatch translate(NumberLiteral literal) 
-		'''«literal.value»'''
-		
-	def dispatch translate(Letrec letrec) 
-		'''(function(){«translateBindings(letrec.bindings)»return «translate(letrec.body)»})()'''
-		
-	def translateBindings(List<Binding> bindings) 
-		'''var «bindings.map([binding|'''«translateId(binding.name)»=«translate(binding.value)»''']).join(',')»;'''
+  
+  override void doGenerate(Resource resource, IFileSystemAccess fsa) {
+    fsa.generateFile( "out.js", translate((resource.allContents.head as Program).value))
+  }
+  
+  def dispatch translate(Variable variable) 
+    '''«translateId(variable.name)»'''
+  
+  def dispatch translate(Application application) 
+    '''«translate(application.function)»(«translate(application.argument)»)'''
+  
+  def dispatch translate(Abstraction abstraction) 
+    '''(function(«translateId(abstraction.parameter)»){return «translate(abstraction.body)»})'''
+  
+  def dispatch translate(NumberLiteral literal) 
+    '''«literal.value»'''
+    
+  def dispatch translate(Letrec letrec) 
+    '''(function(){«translateBindings(letrec.bindings)»return «translate(letrec.body)»})()'''
+    
+  def translateBindings(List<Binding> bindings) 
+    '''var «bindings.map([binding|'''«translateId(binding.name)»=«translate(binding.value)»''']).join(',')»;'''
 
-		
-	def dispatch translate(Suspention suspention) 
-		'''(function(){return «translate(suspention.value)»})'''
-		
-	def dispatch translate(Forcing forcing) 
-		'''«translate(forcing.value)»()'''
+    
+  def dispatch translate(Suspention suspention) 
+    '''(function(){return «translate(suspention.value)»})'''
+    
+  def dispatch translate(Forcing forcing) 
+    '''«translate(forcing.value)»()'''
 
-	def translateId(String id) {
-		if(Character::isLetter(id.charAt(0)))
-		  id
-		else
-		 translateOperator(id)
-	}
-	def String translateOperator(String id) {
-		id.toCharArray.map([x|'__' + translateOperatorChar(x.toString)]).join
-	}
+  def translateId(String id) {
+    if(Character::isLetter(id.charAt(0)))
+      id
+    else
+     translateOperator(id)
+  }
+  def String translateOperator(String id) {
+    id.toCharArray.map([x|'__' + translateOperatorChar(x.toString)]).join
+  }
 
   def String translateOperatorChar(String x) {
     switch x  {
@@ -77,6 +77,6 @@ class MingusGenerator implements IGenerator {
       case '~' : 'newf'
       case '^' : 'circ'
       case '/' : 'slash'
-	  }
-	}
+    }
+  }
 }
