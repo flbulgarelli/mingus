@@ -16,6 +16,8 @@ import org.uqbar.mingus.mingus.Suspention
 import org.uqbar.mingus.mingus.Forcing
 import org.uqbar.mingus.mingus.Binding
 import java.util.List
+import org.uqbar.mingus.mingus.Primitive
+import org.uqbar.mingus.mingus.Term
 
 class MingusGenerator implements IGenerator {
   
@@ -46,7 +48,28 @@ class MingusGenerator implements IGenerator {
     '''(function(){return «translate(suspention.value)»})'''
     
   def dispatch translate(Forcing forcing) 
-    '''«translate(forcing.value)»()'''
+    '''«translate(forcing.value)»()'''    
+    
+    
+    
+  def dispatch translate(Primitive primitive) {
+    switch primitive.name {
+      case '+' : translateBinaryPrimitive('+', primitive.args)
+      case '*' : translateBinaryPrimitive('*', primitive.args)
+      case '-' : translateBinaryPrimitive('-', primitive.args)
+      case '/' : translateBinaryPrimitive('/', primitive.args)
+      case '>' : translateBinaryPrimitive('>', primitive.args)
+      case '<' : translateBinaryPrimitive('<', primitive.args)
+      case '>=' : translateBinaryPrimitive('>=', primitive.args)
+      case '<=' : translateBinaryPrimitive('<=', primitive.args)
+      case '==' : translateBinaryPrimitive('===', primitive.args)
+      case '/=' : translateBinaryPrimitive('!==', primitive.args)
+      default : throw new Exception('Unsupported primitive ' + primitive.name)
+    } 
+  } 
+  
+  def translateBinaryPrimitive(String name, List<Term> args) 
+    '''(«translate(args.get(0))» «name» «translate(args.get(1))»)'''
 
   def translateId(String id) {
     if(Character::isLetter(id.charAt(0)))
@@ -77,6 +100,7 @@ class MingusGenerator implements IGenerator {
       case '~' : 'newf'
       case '^' : 'circ'
       case '/' : 'slash'
+      default : throw new AssertionError('invalid character detected ' + x)
     }
   }
 }

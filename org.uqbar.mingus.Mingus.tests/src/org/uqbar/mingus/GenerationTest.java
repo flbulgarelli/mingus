@@ -80,5 +80,23 @@ public class GenerationTest extends AbstractMingusTest {
     assertGenerates("<= 2", "__lt__eq(2)");
     assertGenerates("~! 2", "__newf__bang(2)");
   }
+  
+  @Test
+  public void translatesArithmeticPrimitives() throws Exception {
+    assertGenerates("prim + 2 4", "(2 + 4)");
+    assertGenerates("prim * 2 4", "(2 * 4)");
+    assertGenerates("prim / 2 4", "(2 / 4)");
+    assertGenerates("prim - 2 4", "(2 - 4)");
+  }
+  
+  @Test
+  public void translatesComparationPrimitives() throws Exception {
+    assertGenerates("prim >= 2 4", "(2 >= 4)");
+    assertGenerates("prim > 2 4", "(2 > 4)");
+    assertGenerates("prim < 2 4", "(2 < 4)");
+    assertGenerates("prim <= 2 4", "(2 <= 4)");
+    assertGenerates("prim == 2 4", "(2 === 4)");
+    assertGenerates("prim /= 2 4", "(2 !== 4)");
+  }
 
 }

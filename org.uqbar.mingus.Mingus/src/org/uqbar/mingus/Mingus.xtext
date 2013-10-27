@@ -16,7 +16,7 @@ Term1 returns Term:
   Term2 | Abstraction;
 
 Term2 returns Term:
-  Term3 ({Application.function=current} argument=Term3)*;
+  Term3 ({Application.function=current} argument=Term3)* | Primitive;
 
 Term3 returns Term:
   Term4 | Suspention | Forcing;
@@ -30,6 +30,9 @@ Term5 returns Term:
 Abstraction:
   '\\' parameter=ID '.' body=Term0;
 
+Primitive:
+  'prim' name=ID args+=Term3*;
+
 Suspention:
   '@' value=Term4;
 
@@ -42,20 +45,22 @@ Variable:
 NumberLiteral:
   value=INT;
 
-Binding:
-  name=ID '=' value=Term1;
-
 Letrec:
   'letrec' bindings+=Binding (SEPARATOR bindings+=Binding)* 'in' body=Term0;
 
 Let:
   'let' bindings+=Binding (SEPARATOR bindings+=Binding)* 'in' body=Term0;
 
+Binding:
+  name=ID '=' value=Term1;
+
 terminal SEPARATOR:
   ',';
 
 terminal ID:
   ('a'..'z' | 'A'..'Z' | '_') ('a'..'z' | 'A'..'Z' | '_' | '0'..'9')* |
+  '==' | 
+  '!!' | 
   ('~' | '$' | '+' | '-' | '?' | '%' | '>' | '<' | '^' | '&' | '|' | '*' | '/' | ':')
   ('~' | '$' | '+' | '-' | '?' | '%' | '>' | '<' | '^' | '&' | '|' | '*' | '/' | '=' | '!' | '@')*;
 

@@ -7,6 +7,7 @@ import org.uqbar.mingus.mingus.Forcing;
 import org.uqbar.mingus.mingus.Let;
 import org.uqbar.mingus.mingus.Letrec;
 import org.uqbar.mingus.mingus.NumberLiteral;
+import org.uqbar.mingus.mingus.Primitive;
 import org.uqbar.mingus.mingus.Suspention;
 import org.uqbar.mingus.mingus.Variable;
 
@@ -140,6 +141,12 @@ public class ParseTest extends AbstractMingusTest {
     assertCanParse(": 1 xs", Application.class);
     assertCanParse("$ f x", Application.class);
     assertCanParse("(++) xs ys", Application.class);
+  }
+  
+  @Test
+  public void canParsePrimitives() throws Exception {
+    assertCanParse("prim foo 2 4 5", Primitive.class);
+    assertCanParse("prim / 2 4 5", Primitive.class);
   }
 
 }
