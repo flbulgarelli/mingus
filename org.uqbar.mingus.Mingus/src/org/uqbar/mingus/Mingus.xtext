@@ -22,7 +22,7 @@ Term3 returns Term:
   Term4 | Suspention | Forcing;
 
 Term4 returns Term:
-  Term5 | Variable | NumberLiteral;
+  Term5 | Variable | NumberLiteral | StringLiteral;
 
 Term5 returns Term:
   '(' Term0 ')';
@@ -31,7 +31,7 @@ Abstraction:
   '\\' parameter=ID '.' body=Term0;
 
 Primitive:
-  'prim' name=ID args+=Term3*;
+  'prim' name=STRING args+=Term3*;
 
 Suspention:
   '@' value=Term4;
@@ -44,6 +44,9 @@ Variable:
 
 NumberLiteral:
   value=INT;
+  
+StringLiteral:
+  value=STRING;  
 
 Letrec:
   'letrec' bindings+=Binding (SEPARATOR bindings+=Binding)* 'in' body=Term0;

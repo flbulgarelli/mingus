@@ -38,7 +38,7 @@ letrec second = \x.\y.y in
   
   @Test
   def void testArithmetic() {
-    assertEquals(eval('''letrec + = \x.\y.prim + x y in + 2 3'''), 5.0)
+    assertEquals(eval('''letrec + = \x.\y.prim '+' x y in + 2 3'''), 5.0)
   }
-	
+  
 }

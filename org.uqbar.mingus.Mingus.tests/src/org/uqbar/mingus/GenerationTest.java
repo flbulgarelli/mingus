@@ -32,6 +32,11 @@ public class GenerationTest extends AbstractMingusTest {
   public void translatesNumbers() throws Exception {
     assertGenerates("12", "12");
   }
+  
+  @Test
+  public void translatesStrings() throws Exception {
+    assertGenerates("'40'", "\"40\"");
+  }
 
   @Test
   public void translatesApplicationOfThreeVariables() throws Exception {
@@ -83,20 +88,20 @@ public class GenerationTest extends AbstractMingusTest {
   
   @Test
   public void translatesArithmeticPrimitives() throws Exception {
-    assertGenerates("prim + 2 4", "(2 + 4)");
-    assertGenerates("prim * 2 4", "(2 * 4)");
-    assertGenerates("prim / 2 4", "(2 / 4)");
-    assertGenerates("prim - 2 4", "(2 - 4)");
+    assertGenerates("prim '+' 2 4", "(2 + 4)");
+    assertGenerates("prim '*' 2 4", "(2 * 4)");
+    assertGenerates("prim '/' 2 4", "(2 / 4)");
+    assertGenerates("prim '-' 2 4", "(2 - 4)");
   }
   
   @Test
   public void translatesComparationPrimitives() throws Exception {
-    assertGenerates("prim >= 2 4", "(2 >= 4)");
-    assertGenerates("prim > 2 4", "(2 > 4)");
-    assertGenerates("prim < 2 4", "(2 < 4)");
-    assertGenerates("prim <= 2 4", "(2 <= 4)");
-    assertGenerates("prim == 2 4", "(2 === 4)");
-    assertGenerates("prim /= 2 4", "(2 !== 4)");
+    assertGenerates("prim '>=' 2 4", "(2 >= 4)");
+    assertGenerates("prim '>' 2 4", "(2 > 4)");
+    assertGenerates("prim '<' 2 4", "(2 < 4)");
+    assertGenerates("prim '<=' 2 4", "(2 <= 4)");
+    assertGenerates("prim '==' 2 4", "(2 === 4)");
+    assertGenerates("prim '/=' 2 4", "(2 !== 4)");
   }
 
 }

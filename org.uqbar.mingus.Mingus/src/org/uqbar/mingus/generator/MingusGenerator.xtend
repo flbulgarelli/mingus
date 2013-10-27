@@ -3,21 +3,22 @@
  */
 package org.uqbar.mingus.generator
 
+import java.util.List
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IGenerator
 import org.uqbar.mingus.mingus.Abstraction
 import org.uqbar.mingus.mingus.Application
+import org.uqbar.mingus.mingus.Binding
+import org.uqbar.mingus.mingus.Forcing
 import org.uqbar.mingus.mingus.Letrec
 import org.uqbar.mingus.mingus.NumberLiteral
-import org.uqbar.mingus.mingus.Program
-import org.uqbar.mingus.mingus.Variable
-import org.uqbar.mingus.mingus.Suspention
-import org.uqbar.mingus.mingus.Forcing
-import org.uqbar.mingus.mingus.Binding
-import java.util.List
 import org.uqbar.mingus.mingus.Primitive
+import org.uqbar.mingus.mingus.Program
+import org.uqbar.mingus.mingus.Suspention
 import org.uqbar.mingus.mingus.Term
+import org.uqbar.mingus.mingus.Variable
+import org.uqbar.mingus.mingus.StringLiteral
 
 class MingusGenerator implements IGenerator {
   
@@ -37,6 +38,9 @@ class MingusGenerator implements IGenerator {
   def dispatch translate(NumberLiteral literal) 
     '''«literal.value»'''
     
+  def dispatch translate(StringLiteral literal) 
+    '''"«literal.value»"'''
+    
   def dispatch translate(Letrec letrec) 
     '''(function(){«translateBindings(letrec.bindings)»return «translate(letrec.body)»})()'''
     
@@ -54,6 +58,7 @@ class MingusGenerator implements IGenerator {
     
   def dispatch translate(Primitive primitive) {
     switch primitive.name {
+      case 'show' : '''(«translate(primitive.args.get(0))».toString())'''
       case '+' : translateBinaryPrimitive('+', primitive.args)
       case '*' : translateBinaryPrimitive('*', primitive.args)
       case '-' : translateBinaryPrimitive('-', primitive.args)
