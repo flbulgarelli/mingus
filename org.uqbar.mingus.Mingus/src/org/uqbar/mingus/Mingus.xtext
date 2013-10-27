@@ -1,7 +1,6 @@
 grammar org.uqbar.mingus.Mingus hidden(WS, ML_COMMENT, SL_COMMENT)
-											
-import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 generate mingus "http://www.uqbar-project.org/mingus/Mingus"
 
 Program:
@@ -47,25 +46,32 @@ Binding:
 	name=ID '=' value=Term1;
 
 Letrec:
-	'letrec' bindings+= Binding (SEPARATOR bindings+=Binding)* 'in' body=Term0;
+	'letrec' bindings+=Binding (SEPARATOR bindings+=Binding)* 'in' body=Term0;
 
 Let:
-	'let' bindings+= Binding (SEPARATOR bindings+=Binding)* 'in' body=Term0;
+	'let' bindings+=Binding (SEPARATOR bindings+=Binding)* 'in' body=Term0;
 
 terminal SEPARATOR:
-	','
-;
+	',';
 
+terminal ID:
+	('a'..'z' | 'A'..'Z' | '_') ('a'..'z' | 'A'..'Z' | '_' | '0'..'9')*;
 
-terminal ID  		: '^'?('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
-terminal INT returns ecore::EInt: ('0'..'9')+;
-terminal STRING	: 
-			'"' ( '\\' ('b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\') | !('\\'|'"') )* '"' |
-			"'" ( '\\' ('b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\') | !('\\'|"'") )* "'"
-		; 
-terminal ML_COMMENT	: '/*' -> '*/';
-terminal SL_COMMENT 	: '//' !('\n'|'\r')* ('\r'? '\n')?;
+terminal INT returns ecore::EInt:
+	('0'..'9')+;
 
-terminal WS			: (' '|'\t'|'\r'|'\n')+;
+terminal STRING:
+	'"' ('\\' ('b' | 't' | 'n' | 'f' | 'r' | 'u' | '"' | "'" | '\\') | !('\\' | '"'))* '"' |
+	"'" ('\\' ('b' | 't' | 'n' | 'f' | 'r' | 'u' | '"' | "'" | '\\') | !('\\' | "'"))* "'";
 
-terminal ANY_OTHER: .;
+terminal ML_COMMENT:
+	'{-'->'-}';
+
+terminal SL_COMMENT:
+	'--' !('\n' | '\r')* ('\r'? '\n')?;
+
+terminal WS:
+	(' ' | '\t' | '\r' | '\n')+;
+
+terminal ANY_OTHER:
+	.;
