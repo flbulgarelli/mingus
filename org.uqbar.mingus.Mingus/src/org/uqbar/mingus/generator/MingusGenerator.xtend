@@ -14,6 +14,8 @@ import org.uqbar.mingus.mingus.Program
 import org.uqbar.mingus.mingus.Variable
 import org.uqbar.mingus.mingus.Suspention
 import org.uqbar.mingus.mingus.Forcing
+import org.uqbar.mingus.mingus.Binding
+import java.util.List
 
 class MingusGenerator implements IGenerator {
 	
@@ -34,7 +36,11 @@ class MingusGenerator implements IGenerator {
 		'''«literal.value»'''
 		
 	def dispatch translate(Letrec letrec) 
-		'''(function(){var «letrec.name»=«translate(letrec.binding)»;return «translate(letrec.body)»})()'''
+		'''(function(){«translateBindings(letrec.bindings)»return «translate(letrec.body)»})()'''
+		
+	def translateBindings(List<Binding> bindings) 
+		'''var «bindings.map([binding|'''«binding.name»=«translate(binding.value)»''']).join(',')»;'''
+
 		
 	def dispatch translate(Suspention suspention) 
 		'''(function(){return «translate(suspention.value)»})'''

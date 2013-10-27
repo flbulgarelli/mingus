@@ -48,6 +48,11 @@ public class GenerationTest extends AbstractMingusTest {
   public void translatesLetrecsIntoScopedVars() throws Exception {
     assertGenerates("letrec x = 2 in z x", "(function(){var x=2;return z(x)})()");
   }
+  
+  @Test
+  public void translatesMultiLetrecsIntoScopedVars() throws Exception {
+    assertGenerates("letrec x = 2, y = 4 in z x y", "(function(){var x=2,y=4;return z(x)(y)})()");
+  }
 
   @Test
   // TODO may optimize here

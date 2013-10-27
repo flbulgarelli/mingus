@@ -77,10 +77,15 @@ public class ParseTest extends AbstractMingusTest {
   public void canParseNumberLiterals() {
     assertCanParse("10", NumberLiteral.class);
   }
-  
+
   @Test
   public void canParseSimpleLets() {
     assertCanParse("let x = 2 in x", Let.class);
+  }
+  
+  @Test
+  public void canParseMultiLetrecs() {
+    assertCanParse("let x = 2; y = 3 in f x y", Let.class);
   }
 
   @Test

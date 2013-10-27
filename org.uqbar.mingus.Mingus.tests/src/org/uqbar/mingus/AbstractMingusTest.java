@@ -18,7 +18,7 @@ import org.uqbar.mingus.mingus.Term;
 
 @RunWith(XtextRunner.class)
 @InjectWith(MingusInjectorProvider.class)
-public class AbstractMingusTest {
+public abstract class AbstractMingusTest {
 
   @Inject
   private IGenerator generator;

@@ -41,8 +41,15 @@ Variable:
 NumberLiteral:
 	value=INT;
 
+Binding:
+	name=ID '=' value=Term1;
+
 Letrec:
-	'letrec' (name=ID) '=' binding=Term1 'in' body=Term0;
+	'letrec' bindings+= Binding (SEPARATOR bindings+=Binding)* 'in' body=Term0;
 
 Let:
-	'let' (name=ID) '=' binding=Term1 'in' body=Term0;	
+	'let' bindings+= Binding (SEPARATOR bindings+=Binding)* 'in' body=Term0;
+
+terminal SEPARATOR:
+	','
+;
