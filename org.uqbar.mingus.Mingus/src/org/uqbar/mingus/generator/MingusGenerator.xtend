@@ -24,13 +24,13 @@ class MingusGenerator implements IGenerator {
 	}
 	
 	def dispatch translate(Variable variable) 
-		'''«variable.name»'''
+		'''«translateId(variable.name)»'''
 	
 	def dispatch translate(Application application) 
 		'''«translate(application.function)»(«translate(application.argument)»)'''
 	
 	def dispatch translate(Abstraction abstraction) 
-		'''(function(«abstraction.parameter»){return «translate(abstraction.body)»})'''
+		'''(function(«translateId(abstraction.parameter)»){return «translate(abstraction.body)»})'''
 	
 	def dispatch translate(NumberLiteral literal) 
 		'''«literal.value»'''
@@ -39,7 +39,7 @@ class MingusGenerator implements IGenerator {
 		'''(function(){«translateBindings(letrec.bindings)»return «translate(letrec.body)»})()'''
 		
 	def translateBindings(List<Binding> bindings) 
-		'''var «bindings.map([binding|'''«binding.name»=«translate(binding.value)»''']).join(',')»;'''
+		'''var «bindings.map([binding|'''«translateId(binding.name)»=«translate(binding.value)»''']).join(',')»;'''
 
 		
 	def dispatch translate(Suspention suspention) 
@@ -47,4 +47,36 @@ class MingusGenerator implements IGenerator {
 		
 	def dispatch translate(Forcing forcing) 
 		'''«translate(forcing.value)»()'''
+
+	def translateId(String id) {
+		if(Character::isLetter(id.charAt(0)))
+		  id
+		else
+		 translateOperator(id)
+	}
+	def String translateOperator(String id) {
+		id.toCharArray.map([x|'__' + translateOperatorChar(x.toString)]).join
+	}
+
+  def String translateOperatorChar(String x) {
+    switch x  {
+      case '$': "$"
+      case '>': "gt"
+      case '<': "lt"
+      case '=': "eq"
+      case '+': "plus"
+      case '-': "minus"
+      case '!': "bang"
+      case '@': "at"
+      case ':': 'colon'
+      case '*': 'mult'
+      case '|': 'pipe'
+      case '&' : 'amp'
+      case '?' : 'quest'
+      case '?' : 'perc'
+      case '~' : 'newf'
+      case '^' : 'circ'
+      case '/' : 'slash'
+	  }
+	}
 }

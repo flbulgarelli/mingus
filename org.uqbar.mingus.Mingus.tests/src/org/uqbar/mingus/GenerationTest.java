@@ -71,5 +71,14 @@ public class GenerationTest extends AbstractMingusTest {
   public void translatesForcingsIntoNullaryFunctionApplication() throws Exception {
     assertGenerates("!x", "x()");
   }
+  
+  @Test
+  public void translatesIds() throws Exception {
+    assertGenerates("+ 2", "__plus(2)");
+    assertGenerates("++ 2", "__plus__plus(2)");
+    assertGenerates("$@>> 2", "__$__at__gt__gt(2)");
+    assertGenerates("<= 2", "__lt__eq(2)");
+    assertGenerates("~! 2", "__newf__bang(2)");
+  }
 
 }

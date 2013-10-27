@@ -82,7 +82,7 @@ public class ParseTest extends AbstractMingusTest {
   public void canParseSimpleLets() {
     assertCanParse("let x = 2 in x", Let.class);
   }
-  
+
   @Test
   public void canParseMultiLetrecs() {
     assertCanParse("let x = 2; y = 3 in f x y", Let.class);
@@ -131,6 +131,15 @@ public class ParseTest extends AbstractMingusTest {
   @Test
   public void canParseForcingOfGeneralTerms() {
     assertCanParse("!(f 2)", Forcing.class);
+  }
+
+  @Test
+  public void canParseOperators() {
+    assertCanParse("- (+ x 1) y", Application.class);
+    assertCanParse(">= z 0", Application.class);
+    assertCanParse(": 1 xs", Application.class);
+    assertCanParse("$ f x", Application.class);
+    assertCanParse("(++) xs ys", Application.class);
   }
 
 }
