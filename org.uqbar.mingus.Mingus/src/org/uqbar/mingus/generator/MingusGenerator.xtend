@@ -12,6 +12,8 @@ import org.uqbar.mingus.mingus.Letrec
 import org.uqbar.mingus.mingus.NumberLiteral
 import org.uqbar.mingus.mingus.Program
 import org.uqbar.mingus.mingus.Variable
+import org.uqbar.mingus.mingus.Suspention
+import org.uqbar.mingus.mingus.Forcing
 
 class MingusGenerator implements IGenerator {
 	
@@ -33,4 +35,10 @@ class MingusGenerator implements IGenerator {
 		
 	def dispatch translate(Letrec letrec) 
 		'''(function(){var «letrec.name»=«translate(letrec.binding)»;return «translate(letrec.body)»})()'''
+		
+	def dispatch translate(Suspention suspention) 
+		'''(function(){return «translate(suspention.value)»})'''
+		
+	def dispatch translate(Forcing forcing) 
+		'''«translate(forcing.value)»()'''
 }

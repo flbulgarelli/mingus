@@ -56,4 +56,15 @@ public class GenerationTest extends AbstractMingusTest {
       "letrec x = f in letrec z = 3 in x z",
       "(function(){var x=f;return (function(){var z=3;return x(z)})()})()");
   }
+  
+  @Test
+  public void translatesSuspendsIntoNullaryFunctions() throws Exception {
+    assertGenerates("@2", "(function(){return 2})");
+  }
+
+  @Test
+  public void translatesForcingsIntoNullaryFunctionApplication() throws Exception {
+    assertGenerates("!x", "x()");
+  }
+
 }

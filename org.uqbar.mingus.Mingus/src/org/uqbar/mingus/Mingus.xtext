@@ -18,13 +18,22 @@ Term2 returns Term:
 	Term3 ({Application.function=current} argument=Term3)*;
 
 Term3 returns Term:
-	Term4 | Variable | NumberLiteral;
+	Term4 | Suspention | Forcing;
 
 Term4 returns Term:
+	Term5 | Variable | NumberLiteral;
+
+Term5 returns Term:
 	'(' Term0 ')';
 
 Abstraction:
 	'\\' parameter=ID '.' body=Term0;
+
+Suspention:
+	'@' value=Term4;
+
+Forcing:
+	'!' value=Term4;
 
 Variable:
 	name=ID;

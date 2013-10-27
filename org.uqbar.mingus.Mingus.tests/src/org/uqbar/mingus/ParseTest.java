@@ -3,9 +3,11 @@ package org.uqbar.mingus;
 import org.junit.Test;
 import org.uqbar.mingus.mingus.Abstraction;
 import org.uqbar.mingus.mingus.Application;
+import org.uqbar.mingus.mingus.Forcing;
 import org.uqbar.mingus.mingus.Let;
 import org.uqbar.mingus.mingus.Letrec;
 import org.uqbar.mingus.mingus.NumberLiteral;
+import org.uqbar.mingus.mingus.Suspention;
 import org.uqbar.mingus.mingus.Variable;
 
 public class ParseTest extends AbstractMingusTest {
@@ -99,6 +101,31 @@ public class ParseTest extends AbstractMingusTest {
   @Test
   public void canParseRecursiveLetrecs() {
     assertCanParse("letrec x = x x in x", Letrec.class);
+  }
+
+  @Test
+  public void canParseSuspentionOfVariables() {
+    assertCanParse("@x", Suspention.class);
+  }
+
+  @Test
+  public void canParseSuspentionOfNumbers() {
+    assertCanParse("@1", Suspention.class);
+  }
+
+  @Test
+  public void canParseSuspentionOfGeneralTerms() {
+    assertCanParse("@(f 2)", Suspention.class);
+  }
+
+  @Test
+  public void canParseForcingOfVariables() {
+    assertCanParse("!f", Forcing.class);
+  }
+
+  @Test
+  public void canParseForcingOfGeneralTerms() {
+    assertCanParse("!(f 2)", Forcing.class);
   }
 
 }
