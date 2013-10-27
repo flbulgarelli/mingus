@@ -36,7 +36,7 @@ class MingusGenerator implements IGenerator {
     '''(function(«translateId(abstraction.parameter)»){return «translate(abstraction.body)»})'''
   
   def dispatch translate(NumberLiteral literal) 
-    '''«literal.value»'''
+    '''(«literal.value»)'''
     
   def dispatch translate(StringLiteral literal) 
     '''"«literal.value»"'''
@@ -53,8 +53,6 @@ class MingusGenerator implements IGenerator {
     
   def dispatch translate(Forcing forcing) 
     '''«translate(forcing.value)»()'''    
-    
-    
     
   def dispatch translate(Primitive primitive) {
     switch primitive.name {

@@ -30,7 +30,7 @@ public class GenerationTest extends AbstractMingusTest {
 
   @Test
   public void translatesNumbers() throws Exception {
-    assertGenerates("12", "12");
+    assertGenerates("12", "(12)");
   }
   
   @Test
@@ -51,12 +51,12 @@ public class GenerationTest extends AbstractMingusTest {
 
   @Test
   public void translatesLetrecsIntoScopedVars() throws Exception {
-    assertGenerates("letrec x = 2 in z x", "(function(){var x=2;return z(x)})()");
+    assertGenerates("letrec x = 2 in z x", "(function(){var x=(2);return z(x)})()");
   }
   
   @Test
   public void translatesMultiLetrecsIntoScopedVars() throws Exception {
-    assertGenerates("letrec x = 2, y = 4 in z x y", "(function(){var x=2,y=4;return z(x)(y)})()");
+    assertGenerates("letrec x = 2, y = 4 in z x y", "(function(){var x=(2),y=(4);return z(x)(y)})()");
   }
 
   @Test
@@ -64,12 +64,12 @@ public class GenerationTest extends AbstractMingusTest {
   public void translatesNestedLetrecsIntoNestedScopedVars() throws Exception {
     assertGenerates(
       "letrec x = f in letrec z = 3 in x z",
-      "(function(){var x=f;return (function(){var z=3;return x(z)})()})()");
+      "(function(){var x=f;return (function(){var z=(3);return x(z)})()})()");
   }
   
   @Test
   public void translatesSuspendsIntoNullaryFunctions() throws Exception {
-    assertGenerates("@2", "(function(){return 2})");
+    assertGenerates("@2", "(function(){return (2)})");
   }
 
   @Test
@@ -79,29 +79,29 @@ public class GenerationTest extends AbstractMingusTest {
   
   @Test
   public void translatesIds() throws Exception {
-    assertGenerates("+ 2", "__plus(2)");
-    assertGenerates("++ 2", "__plus__plus(2)");
-    assertGenerates("$@>> 2", "__$__at__gt__gt(2)");
-    assertGenerates("<= 2", "__lt__eq(2)");
-    assertGenerates("~! 2", "__newf__bang(2)");
+    assertGenerates("+ 2", "__plus((2))");
+    assertGenerates("++ 2", "__plus__plus((2))");
+    assertGenerates("$@>> 2", "__$__at__gt__gt((2))");
+    assertGenerates("<= x", "__lt__eq(x)");
+    assertGenerates("~! x", "__newf__bang(x)");
   }
   
   @Test
   public void translatesArithmeticPrimitives() throws Exception {
-    assertGenerates("prim '+' 2 4", "(2 + 4)");
-    assertGenerates("prim '*' 2 4", "(2 * 4)");
-    assertGenerates("prim '/' 2 4", "(2 / 4)");
-    assertGenerates("prim '-' 2 4", "(2 - 4)");
+    assertGenerates("prim '+' 2 x", "((2) + x)");
+    assertGenerates("prim '*' 2 x", "((2) * x)");
+    assertGenerates("prim '/' 2 x", "((2) / x)");
+    assertGenerates("prim '-' 2 x", "((2) - x)");
   }
   
   @Test
   public void translatesComparationPrimitives() throws Exception {
-    assertGenerates("prim '>=' 2 4", "(2 >= 4)");
-    assertGenerates("prim '>' 2 4", "(2 > 4)");
-    assertGenerates("prim '<' 2 4", "(2 < 4)");
-    assertGenerates("prim '<=' 2 4", "(2 <= 4)");
-    assertGenerates("prim '==' 2 4", "(2 === 4)");
-    assertGenerates("prim '/=' 2 4", "(2 !== 4)");
+    assertGenerates("prim '>=' 2 x", "((2) >= x)");
+    assertGenerates("prim '>' 2 x", "((2) > x)");
+    assertGenerates("prim '<' 2 x", "((2) < x)");
+    assertGenerates("prim '<=' 2 x", "((2) <= x)");
+    assertGenerates("prim '==' 2 x", "((2) === x)");
+    assertGenerates("prim '/=' 2 x", "((2) !== x)");
   }
 
 }
