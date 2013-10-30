@@ -5,6 +5,7 @@ import javax.script.ScriptEngineManager
 import org.junit.Test
 
 import static org.junit.Assert.*
+import java.util.Map
 class EvalTest extends AbstractMingusTest {
   
   def eval(CharSequence code) {
@@ -45,5 +46,18 @@ letrec second = \x.\y.y in
   def void testShow() {
     assertEquals(eval('''prim 'show' 4'''), '4')
   }
+
+  @Test
+  def void testConstruct() {
+    var o = eval('''
+letrec 
+  Nil = cons Nil {},
+  Cons = \x.\xs.cons Cons {head=x, tail=xs}
+in
+  Cons 1 (Cons 2 Nil)''') as Map
+    assertEquals(1.0, o.get("head"))
+    assertEquals(2.0, (o.get("tail") as Map).get('head'))
+  }
+  
 	
 }

@@ -16,7 +16,7 @@ Term1 returns Term:
   Term2 | Abstraction;
 
 Term2 returns Term:
-  Term3 ({Application.function=current} argument=Term3)* | Primitive;
+  Term3 ({Application.function=current} argument=Term3)* | Primitive | Constructor;
 
 Term3 returns Term:
   Term4 | Suspention | Forcing;
@@ -30,15 +30,23 @@ Term5 returns Term:
 Abstraction:
   '\\' parameter=ID '.' body=Term0;
 
-Primitive:
-  'prim' name=STRING args+=Term3*;
+Primitive: //TODO rename to primitive application
+  'prim' name=STRING args+=Term3*; //TODO make name Id
+
+Constructor: //TODO rename to Construction Application
+  'cons' tag=ID values=TaggedTerm1Set
+; 
+
+TaggedTerm1Set: 
+  {TaggedTerm1Set} '{' elements+=Binding (SEPARATOR elements+=Binding)*'}' //TODO rename Binding to TaggedTerm1
+;
 
 Suspention:
   '@' value=Term4;
 
 Forcing:
   '!' value=Term4;
-
+  
 Variable:
   name=ID;
 

@@ -3,6 +3,7 @@ package org.uqbar.mingus;
 import org.junit.Test;
 import org.uqbar.mingus.mingus.Abstraction;
 import org.uqbar.mingus.mingus.Application;
+import org.uqbar.mingus.mingus.Constructor;
 import org.uqbar.mingus.mingus.Forcing;
 import org.uqbar.mingus.mingus.Let;
 import org.uqbar.mingus.mingus.Letrec;
@@ -153,6 +154,16 @@ public class ParseTest extends AbstractMingusTest {
   public void canParsePrimitives() throws Exception {
     assertCanParse("prim 'foo' 2 4 5", Primitive.class);
     assertCanParse("prim '/' 2 4 5", Primitive.class);
+  }
+  
+  @Test
+  public void canParseEmptyConstructor() throws Exception {
+    assertCanParse("cons Nothing {}", Constructor.class);
+  }
+  
+  @Test
+  public void canParseNonEmptyConstructor() throws Exception {
+    assertCanParse("cons Cons {head=1, tail=(cons Nil {})}", Constructor.class);
   }
 
 }

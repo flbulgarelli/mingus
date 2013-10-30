@@ -103,5 +103,22 @@ public class GenerationTest extends AbstractMingusTest {
     assertGenerates("prim '==' 2 x", "((2) === x)");
     assertGenerates("prim '/=' 2 x", "((2) !== x)");
   }
+  
+  @Test
+  public void translatesEmptyConstructorIntoObjectCreation() throws Exception {
+    assertGenerates("cons nothing {}", "{tag:'nothing'}");
+  }
+  
+  @Test
+  public void translatesSingletonConstructorIntoObjectCreation() throws Exception {
+    assertGenerates("cons some {value = 1}", "{tag:'some',value:(1)}");
+  }
+
+  @Test
+  public void translatesGeneralConstructorIntoObjectCreation() throws Exception {
+    assertGenerates("cons foo {x = 1, y = 2}", "{tag:'foo',x:(1),y:(2)}");
+  }
+  
+  
 
 }

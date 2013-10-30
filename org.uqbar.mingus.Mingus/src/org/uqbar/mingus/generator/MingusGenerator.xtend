@@ -19,6 +19,7 @@ import org.uqbar.mingus.mingus.Suspention
 import org.uqbar.mingus.mingus.Term
 import org.uqbar.mingus.mingus.Variable
 import org.uqbar.mingus.mingus.StringLiteral
+import org.uqbar.mingus.mingus.Constructor
 
 class MingusGenerator implements IGenerator {
   
@@ -70,6 +71,13 @@ class MingusGenerator implements IGenerator {
       default : throw new Exception('Unsupported primitive ' + primitive.name)
     } 
   } 
+  
+  def dispatch translate(Constructor constructor) {
+    '''{tag:'«constructor.tag»'«constructor.values.elements.map [ element|
+      ''',«translateId(element.name)»:«translate(element.value)»'''
+    ].join»}'''
+  }
+  
   
   def translateBinaryPrimitive(String name, List<Term> args) 
     '''(«translate(args.get(0))» «name» «translate(args.get(1))»)'''
