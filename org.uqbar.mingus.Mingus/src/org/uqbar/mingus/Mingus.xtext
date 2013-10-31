@@ -6,6 +6,7 @@ generate mingus "http://www.uqbar-project.org/mingus/Mingus"
 Program:
   value=Term;
 
+  //================TERM PRECEDENCES==============
 Term returns Term:
   Term0;
 
@@ -27,34 +28,18 @@ Term4 returns Term:
 Term5 returns Term:
   '(' Term0 ')';
 
+  //================EXPLICIT TERMS==============
 Abstraction:
   '\\' parameter=ID '.' body=Term0;
 
-PrimitiveApplication: 
-  'prim' name=ID args+=Term3*;
-
-ConstructorApplication: 
-  'cons' tag=ID values=TaggedTermSet
-; 
-
-TaggedTermSet: 
-  {TaggedTermSet} '{' (elements+=TaggedTerm (SEPARATOR elements+=TaggedTerm)+)?'}' 
-;
-
-Suspention:
-  '@' value=Term4;
-
-Forcing:
-  '!' value=Term4;
-  
 Variable:
   name=ID;
 
 NumberLiteral:
   value=INT;
-  
+
 StringLiteral:
-  value=STRING;  
+  value=STRING;
 
 Letrec:
   'letrec' bindings+=TaggedTerm (SEPARATOR bindings+=TaggedTerm)* 'in' body=Term0;
@@ -62,16 +47,33 @@ Letrec:
 Let:
   'let' bindings+=TaggedTerm (SEPARATOR bindings+=TaggedTerm)* 'in' body=Term0;
 
+PrimitiveApplication:
+  'prim' name=ID args+=Term3*;
+
+ConstructorApplication:
+  'cons' tag=ID values=TaggedTermSet;
+
+Suspention:
+  '@' value=Term4;
+
+Forcing:
+  '!' value=Term4;
+
+//===============Term Partials===============
 TaggedTerm:
   name=ID '=' value=Term1;
 
+TaggedTermSet:
+  {TaggedTermSet} '{' (elements+=TaggedTerm (SEPARATOR elements+=TaggedTerm)+)? '}';
+
+//============TERMINALS======================
 terminal SEPARATOR:
   ',';
 
 terminal ID:
   ('a'..'z' | 'A'..'Z' | '_') ('a'..'z' | 'A'..'Z' | '_' | '0'..'9')* |
-  '==' | 
-  '!!' | 
+  '==' |
+  '!!' |
   ('~' | '$' | '+' | '-' | '?' | '%' | '>' | '<' | '^' | '&' | '|' | '*' | '/' | ':')
   ('~' | '$' | '+' | '-' | '?' | '%' | '>' | '<' | '^' | '&' | '|' | '*' | '/' | '=' | '!' | '@')*;
 
