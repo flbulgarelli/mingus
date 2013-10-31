@@ -9,17 +9,17 @@ import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IGenerator
 import org.uqbar.mingus.mingus.Abstraction
 import org.uqbar.mingus.mingus.Application
-import org.uqbar.mingus.mingus.Binding
 import org.uqbar.mingus.mingus.Forcing
 import org.uqbar.mingus.mingus.Letrec
 import org.uqbar.mingus.mingus.NumberLiteral
-import org.uqbar.mingus.mingus.Primitive
 import org.uqbar.mingus.mingus.Program
 import org.uqbar.mingus.mingus.Suspention
 import org.uqbar.mingus.mingus.Term
 import org.uqbar.mingus.mingus.Variable
 import org.uqbar.mingus.mingus.StringLiteral
-import org.uqbar.mingus.mingus.Constructor
+import org.uqbar.mingus.mingus.TaggedTerm
+import org.uqbar.mingus.mingus.PrimitiveApplication
+import org.uqbar.mingus.mingus.ConstructorApplication
 
 class MingusGenerator implements IGenerator {
   
@@ -45,7 +45,7 @@ class MingusGenerator implements IGenerator {
   def dispatch translate(Letrec letrec) 
     '''(function(){«translateBindings(letrec.bindings)»return «translate(letrec.body)»})()'''
     
-  def translateBindings(List<Binding> bindings) 
+  def translateBindings(List<TaggedTerm> bindings) 
     '''var «bindings.map([binding|'''«translateId(binding.name)»=«translate(binding.value)»''']).join(',')»;'''
 
     
@@ -55,7 +55,7 @@ class MingusGenerator implements IGenerator {
   def dispatch translate(Forcing forcing) 
     '''«translate(forcing.value)»()'''    
     
-  def dispatch translate(Primitive primitive) {
+  def dispatch translate(PrimitiveApplication primitive) {
     switch primitive.name {
       case 'show' : '''(«translate(primitive.args.get(0))».toString())'''
       case '+' : translateBinaryPrimitive('+', primitive.args)
@@ -72,7 +72,7 @@ class MingusGenerator implements IGenerator {
     } 
   } 
   
-  def dispatch translate(Constructor constructor) {
+  def dispatch translate(ConstructorApplication constructor) {
     '''{tag:'«constructor.tag»'«constructor.values.elements.map [ element|
       ''',«translateId(element.name)»:«translate(element.value)»'''
     ].join»}'''
