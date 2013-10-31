@@ -88,20 +88,20 @@ public class GenerationTest extends AbstractMingusTest {
   
   @Test
   public void translatesArithmeticPrimitives() throws Exception {
-    assertGenerates("prim '+' 2 x", "((2) + x)");
-    assertGenerates("prim '*' 2 x", "((2) * x)");
-    assertGenerates("prim '/' 2 x", "((2) / x)");
-    assertGenerates("prim '-' 2 x", "((2) - x)");
+    assertGenerates("prim + 2 x", "((2) + x)");
+    assertGenerates("prim * 2 x", "((2) * x)");
+    assertGenerates("prim / 2 x", "((2) / x)");
+    assertGenerates("prim - 2 x", "((2) - x)");
   }
   
   @Test
   public void translatesComparationPrimitives() throws Exception {
-    assertGenerates("prim '>=' 2 x", "((2) >= x)");
-    assertGenerates("prim '>' 2 x", "((2) > x)");
-    assertGenerates("prim '<' 2 x", "((2) < x)");
-    assertGenerates("prim '<=' 2 x", "((2) <= x)");
-    assertGenerates("prim '==' 2 x", "((2) === x)");
-    assertGenerates("prim '/=' 2 x", "((2) !== x)");
+    assertGenerates("prim >= 2 x", "((2) >= x)");
+    assertGenerates("prim > 2 x", "((2) > x)");
+    assertGenerates("prim < 2 x", "((2) < x)");
+    assertGenerates("prim <= 2 x", "((2) <= x)");
+    assertGenerates("prim == 2 x", "((2) === x)");
+    assertGenerates("prim /= 2 x", "((2) !== x)");
   }
   
   @Test

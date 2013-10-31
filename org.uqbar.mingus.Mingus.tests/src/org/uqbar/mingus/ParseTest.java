@@ -152,8 +152,8 @@ public class ParseTest extends AbstractMingusTest {
   
   @Test
   public void canParsePrimitives() throws Exception {
-    assertCanParse("prim 'foo' 2 4 5", PrimitiveApplication.class);
-    assertCanParse("prim '/' 2 4 5", PrimitiveApplication.class);
+    assertCanParse("prim foo 2 4 5", PrimitiveApplication.class);
+    assertCanParse("prim / 2 4 5", PrimitiveApplication.class);
   }
   
   @Test

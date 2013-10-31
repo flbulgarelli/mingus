@@ -31,14 +31,14 @@ Abstraction:
   '\\' parameter=ID '.' body=Term0;
 
 PrimitiveApplication: 
-  'prim' name=STRING args+=Term3*; //TODO make name Id
+  'prim' name=ID args+=Term3*;
 
 ConstructorApplication: 
   'cons' tag=ID values=TaggedTermSet
 ; 
 
 TaggedTermSet: 
-  {TaggedTermSet} '{' elements+=TaggedTerm (SEPARATOR elements+=TaggedTerm)*'}' 
+  {TaggedTermSet} '{' (elements+=TaggedTerm (SEPARATOR elements+=TaggedTerm)+)?'}' 
 ;
 
 Suspention:
