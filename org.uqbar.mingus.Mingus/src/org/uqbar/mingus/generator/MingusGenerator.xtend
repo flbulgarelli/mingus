@@ -20,6 +20,7 @@ import org.uqbar.mingus.mingus.StringLiteral
 import org.uqbar.mingus.mingus.TaggedTerm
 import org.uqbar.mingus.mingus.PrimitiveApplication
 import org.uqbar.mingus.mingus.ConstructorApplication
+import org.uqbar.mingus.mingus.If
 
 class MingusGenerator implements IGenerator {
   
@@ -32,6 +33,10 @@ class MingusGenerator implements IGenerator {
   
   def dispatch translate(Application application) 
     '''«translate(application.function)»(«translate(application.argument)»)'''
+  
+    def dispatch String translate(Object abstraction) {
+      throw new Exception(abstraction.toString)
+    } 
   
   def dispatch translate(Abstraction abstraction) 
     '''(function(«translateId(abstraction.parameter)»){return «translate(abstraction.body)»})'''
@@ -48,7 +53,9 @@ class MingusGenerator implements IGenerator {
   def translateBindings(List<TaggedTerm> bindings) 
     '''var «bindings.map([binding|'''«translateId(binding.name)»=«translate(binding.value)»''']).join(',')»;'''
 
-    
+  def dispatch translate(If _if) 
+    '''(function(){if(«translate(_if.condition)»){return «translate(_if.ifTrue)»;}else{return «translate(_if.ifFalse)»;}})()'''
+
   def dispatch translate(Suspention suspention) 
     '''(function(){return «translate(suspention.value)»})'''
     

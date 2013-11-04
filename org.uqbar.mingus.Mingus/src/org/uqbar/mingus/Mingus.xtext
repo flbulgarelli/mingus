@@ -17,7 +17,7 @@ Term1 returns Term:
   Term2 | Abstraction;
 
 Term2 returns Term:
-  Term3 ({Application.function=current} argument=Term3)* | PrimitiveApplication | ConstructorApplication;
+  Term3 ({Application.function=current} argument=Term3)* | PrimitiveApplication | ConstructorApplication | If;
 
 Term3 returns Term:
   Term4 | Suspention | Forcing;
@@ -46,6 +46,9 @@ Letrec:
 
 Let:
   'let' bindings+=TaggedTerm (SEPARATOR bindings+=TaggedTerm)* 'in' body=Term0;
+
+If:
+  'if' condition=Term3 ifTrue=Term3 ifFalse=Term3;
 
 PrimitiveApplication:
   'prim' name=ID args+=Term3*;

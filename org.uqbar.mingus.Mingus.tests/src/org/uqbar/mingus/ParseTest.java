@@ -5,6 +5,7 @@ import org.uqbar.mingus.mingus.Abstraction;
 import org.uqbar.mingus.mingus.Application;
 import org.uqbar.mingus.mingus.ConstructorApplication;
 import org.uqbar.mingus.mingus.Forcing;
+import org.uqbar.mingus.mingus.If;
 import org.uqbar.mingus.mingus.Let;
 import org.uqbar.mingus.mingus.Letrec;
 import org.uqbar.mingus.mingus.NumberLiteral;
@@ -164,6 +165,26 @@ public class ParseTest extends AbstractMingusTest {
   @Test
   public void canParseNonEmptyConstructor() throws Exception {
     assertCanParse("cons Cons {head=1, tail=(cons Nil {})}", ConstructorApplication.class);
+  }
+  
+  @Test
+  public void canParseSimpleIf() throws Exception {
+    assertCanParse("if x then y else z", If.class);
+  }
+  
+  @Test
+  public void canParseNestedIf() throws Exception {
+    assertCanParse("if x x (if y z k)", If.class);
+  }
+  
+  @Test
+  public void canParseIfWithinsLets() throws Exception {
+    assertCanParse("let x = if z z k in x", Let.class);
+  }
+  
+  @Test
+  public void canParseLetsWithinIfs() throws Exception {
+    assertCanParse("if z z (let x = z in x)", If.class);
   }
 
 }

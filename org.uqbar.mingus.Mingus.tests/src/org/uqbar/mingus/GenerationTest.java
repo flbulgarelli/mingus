@@ -118,7 +118,17 @@ public class GenerationTest extends AbstractMingusTest {
   public void translatesGeneralConstructorIntoObjectCreation() throws Exception {
     assertGenerates("cons foo {x = 1, y = 2}", "{tag:'foo',x:(1),y:(2)}");
   }
-  
-  
+
+  @Test
+  public void translatesIfsIntoIfExpressions() throws Exception {
+    assertGenerates("if x z k", "(function(){if(x){return z;}else{return k;}})()");
+  }
+
+  @Test
+  public void translatesNestedIfsIntoNestedIfExpressions() throws Exception {
+    assertGenerates(
+      "if x z (if k j p)",
+      "(function(){if(x){return z;}else{return (function(){if(k){return j;}else{return p;}})();}})()");
+  }
 
 }
