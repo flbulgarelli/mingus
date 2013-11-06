@@ -15,17 +15,24 @@ Term0 returns Term:
 
 Term1 returns Term:
   Term2 | Abstraction;
-
+  
 Term2 returns Term:
-  Term3 ({Application.function=current} argument=Term3)* | PrimitiveApplication | ConstructorApplication | If;
+  Term3 | PatternMatching
+;  
 
 Term3 returns Term:
-  Term4 | Suspention | Forcing;
+  Term4 ({Application.function=current} argument=Term4)* 
+  | PrimitiveApplication 
+  | ConstructorApplication 
+  | If;
 
 Term4 returns Term:
-  Term5 | Variable | NumberLiteral | StringLiteral;
+  Term5 | Suspention | Forcing;
 
 Term5 returns Term:
+  Term6 | Variable | Literal;
+
+Term6 returns Term:
   '(' Term0 ')';
 
   //================EXPLICIT TERMS==============
@@ -34,6 +41,9 @@ Abstraction:
 
 Variable:
   name=ID;
+
+Literal:
+  NumberLiteral | StringLiteral;
 
 NumberLiteral:
   value=INT;
@@ -48,26 +58,52 @@ Let:
   'let' bindings+=TaggedTerm (SEPARATOR bindings+=TaggedTerm)* 'in' body=Term0;
 
 If:
-  'if' condition=Term3 ifTrue=Term3 ifFalse=Term3;
+  'if' condition=Term4 ifTrue=Term4 ifFalse=Term4;
 
 PrimitiveApplication:
-  'prim' name=ID args+=Term3*;
+  'prim' name=ID args+=Term4*;
 
 ConstructorApplication:
   'cons' tag=ID values=TaggedTermSet;
 
 Suspention:
-  '@' value=Term4;
+  '@' value=Term5;
 
 Forcing:
-  '!' value=Term4;
+  '!' value=Term5;
+  
+PatternMatching: 
+  'case' value=Term3 'of' clauses+=PatternMatchingClause (SEPARATOR clauses+=PatternMatchingClause)*
+;  
+
+//===============Patterns===============
+
+PatternMatchingClause:
+  pattern=Pattern '=>' result=Term3
+;
+
+Pattern:
+  Variable | Literal | DeconstructionApplication
+;
+
+DeconstructionApplication:
+  tag=ID values=TaggedPatternSet
+;
+
+//===============Pattern Partials===============
+TaggedPattern: 
+  name=ID '=' value=Variable
+;
+
+TaggedPatternSet:
+  {TaggedPatternSet} '{' (elements+=TaggedPattern (SEPARATOR elements+=TaggedPattern)*)? '}';
 
 //===============Term Partials===============
 TaggedTerm:
   name=ID '=' value=Term1;
 
 TaggedTermSet:
-  {TaggedTermSet} '{' (elements+=TaggedTerm (SEPARATOR elements+=TaggedTerm)+)? '}';
+  {TaggedTermSet} '{' (elements+=TaggedTerm (SEPARATOR elements+=TaggedTerm)*)? '}';
 
 //============TERMINALS======================
 terminal SEPARATOR:

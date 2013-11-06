@@ -91,5 +91,35 @@ in
     assertEquals(3.0, o.get('val2'))
   }  
   
+  @Test
+  def void testVariablePattern() {
+    assertEquals(1.0, eval('''
+    case 1 of x => x
+'''))
+  }
+  
+    @Test
+  def void testConstantPattern() {
+    assertEquals(0.0, eval('''
+    case 0 of 0 => 0
+'''))
+  }
+  
+      @Test
+  def void testMultiPattern() {
+    assertEquals(1.0, eval('''
+    case 4 of 0 => 0, x => 1
+'''))
+  }
+  
+  
+    @Test
+  def void testTaggedPattern() {
+    assertEquals(2.0, eval('''
+    case (cons Just {value=2}) of Just {value=x} => x
+'''))
+  }
+    
+  
 	
 }

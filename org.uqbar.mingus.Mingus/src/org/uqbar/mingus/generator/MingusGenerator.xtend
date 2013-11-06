@@ -9,18 +9,21 @@ import org.eclipse.xtext.generator.IFileSystemAccess
 import org.eclipse.xtext.generator.IGenerator
 import org.uqbar.mingus.mingus.Abstraction
 import org.uqbar.mingus.mingus.Application
+import org.uqbar.mingus.mingus.ConstructorApplication
 import org.uqbar.mingus.mingus.Forcing
+import org.uqbar.mingus.mingus.If
 import org.uqbar.mingus.mingus.Letrec
 import org.uqbar.mingus.mingus.NumberLiteral
+import org.uqbar.mingus.mingus.PrimitiveApplication
 import org.uqbar.mingus.mingus.Program
+import org.uqbar.mingus.mingus.StringLiteral
 import org.uqbar.mingus.mingus.Suspention
+import org.uqbar.mingus.mingus.TaggedTerm
 import org.uqbar.mingus.mingus.Term
 import org.uqbar.mingus.mingus.Variable
-import org.uqbar.mingus.mingus.StringLiteral
-import org.uqbar.mingus.mingus.TaggedTerm
-import org.uqbar.mingus.mingus.PrimitiveApplication
-import org.uqbar.mingus.mingus.ConstructorApplication
-import org.uqbar.mingus.mingus.If
+import org.uqbar.mingus.mingus.PatternMatching
+import org.uqbar.mingus.mingus.Literal
+import org.uqbar.mingus.mingus.DeconstructionApplication
 
 class MingusGenerator implements IGenerator {
   
@@ -60,7 +63,7 @@ class MingusGenerator implements IGenerator {
     '''(function(){return «translate(suspention.value)»})'''
     
   def dispatch translate(Forcing forcing) 
-    '''«translate(forcing.value)»()'''    
+    '''«translate(forcing.value)»()'''
     
   def dispatch translate(PrimitiveApplication primitive) {
     switch primitive.name {
@@ -84,6 +87,22 @@ class MingusGenerator implements IGenerator {
       ''',«translateId(element.name)»:«translate(element.value)»'''
     ].join»}'''
   }
+  
+   def dispatch translate(PatternMatching patternMatching) 
+    '''(function($){«
+        patternMatching.clauses.map[translatePatternClause(it.pattern, it.result)].join(';')
+      »;fail();})(«translate(patternMatching.value)»)''' 
+  
+  def dispatch translatePatternClause(Literal pattern, Term result) 
+    '''if($===«translate(pattern)»){return «translate(result)»;}'''
+    
+  def dispatch translatePatternClause(Variable pattern, Term result) 
+    '''return (function(){var «translate(pattern)»=$;return «translate(result)»;})()'''
+
+  def dispatch translatePatternClause(DeconstructionApplication pattern, Term result) 
+    '''if($.tag==='«pattern.tag»'){return (function(){«
+    pattern.values.elements.map['''var «translate(it.value)»=$.«translateId(it.name)»'''].join(';')
+    »;return «translate(result)»;})()}'''
   
   
   def translateBinaryPrimitive(String name, List<Term> args) 

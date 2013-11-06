@@ -9,6 +9,7 @@ import org.uqbar.mingus.mingus.If;
 import org.uqbar.mingus.mingus.Let;
 import org.uqbar.mingus.mingus.Letrec;
 import org.uqbar.mingus.mingus.NumberLiteral;
+import org.uqbar.mingus.mingus.PatternMatching;
 import org.uqbar.mingus.mingus.PrimitiveApplication;
 import org.uqbar.mingus.mingus.StringLiteral;
 import org.uqbar.mingus.mingus.Suspention;
@@ -186,5 +187,15 @@ public class ParseTest extends AbstractMingusTest {
   public void canParseLetsWithinIfs() throws Exception {
     assertCanParse("if z z (let x = z in x)", If.class);
   }
-
+  
+  @Test
+  public void canParseSinglePatternPatternMatching() throws Exception {
+    assertCanParse("case x of y => z", PatternMatching.class);
+  }
+  
+  @Test
+  public void canParseMultiPatternPatternMatching() throws Exception {
+    assertCanParse("case x of Cons {y=y} => z, k => k, 3 => k", PatternMatching.class);
+  }
+  
 }
